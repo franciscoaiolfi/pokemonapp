@@ -1,48 +1,44 @@
 # Pokédex App
 
-    Este projeto foi desenvolvido com Ionic + Angular usando a PokeAPI para listar Pokémons e exibir seus detalhes.
+![Ionic](https://img.shields.io/badge/Ionic-3880FF?style=for-the-badge&logo=ionic&logoColor=white)
 
-    Adotei o padrão de **componentes standalone**, evitando o uso de módulos tradicionais para maior modularidade.  
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white)
 
-    Implementei a navegação entre páginas com o Angular Router e rotas dinâmicas via `/details/:name`.  
+![PokeAPI](https://img.shields.io/badge/PokeAPI-EF5350?style=for-the-badge)
 
-    Utilizei `Observables` nos services, seguindo a abordagem reativa do Angular com `HttpClient`.  
+A Pokémon encyclopedia built with Ionic + Angular using the PokeAPI to list Pokémon and display their details.
 
-    Todas as respostas da API são tipadas com `interfaces` para garantir segurança e clareza no código. 
+## 🚀 Technical Implementation
 
-    A aplicação é construída com **estilo mobile first**, mas ajustada com `@media` queries para telas maiores.  
-    
-    Evitei o uso de `any` e priorizei boas práticas como separação de responsabilidades e nomes semânticos.  
+### 🧩 Architecture
+- **Standalone components** approach (no NgModules)
+- Feature-based organization
+- Reactive programming with RxJS Observables
+- Strict typing with dedicated interfaces
 
-    Implementei paginação manual com controle de `offset` e `limit`, e estrutura de card com imagem oficial.  
+### 🛠 Core Features
+- Paginated Pokémon listing with dynamic loading
+- Detailed view with multiple Pokémon attributes
+- Responsive design (mobile-first with desktop adaptations)
+- Clean navigation with Angular Router
+- State management for favorites (in progress)
 
-    Incluí tratamento para botão de voltar funcional mesmo em acessos diretos à rota de detalhes.  
-    
-    O código foi escrito com clareza, foco em legibilidade e organização por contexto (pages, models, services).
+### ✅ Completed Features
+| Feature | Status |
+|---------|--------|
+| Main screen with Pokémon list | ✅ |
+| Responsive grid layout | ✅ |
+| Detail navigation (`/details/:name`) | ✅ |
+| Detail view with 6+ attributes | ✅ |
+| Clean commit history | ✅ |
+| Pagination (offset/limit) | ✅ |
+| Dependency injection | ✅ |
+| Strict typing | ✅ |
 
-
-
-# ✅ Entregas concluídas com sucesso
-    ✅ 1	Tela principal com nome e imagem do Pokémon
-    ✅ 2	Layout funcional e organizado com ion-grid e ion-card
-    ✅ 3	Navegação para tela de detalhes (/details/:name)
-    ✅ 3.1	Tela de detalhes com +6 descrições 
-    ✅ Boas práticas	Commits organizados, estrutura modular, sem uso de any
-    ✅ README.md	Dentro do limite de 10 frases explicando decisões técnicas
-    ✅ Paginação	Implementada via offset e limit com botões Next/Previous
-    ✅ Injeção de dependência	PokemonService injetado por @Injectable()
-    ✅ Responsividade	Mobile first + media queries para desktop
-    ✅ Tipagem estrita	Uso de interfaces para todas as respostas da API
-
-
-
-# 🟡 Parcialmente ou com oportunidade de melhoria
-    🟡 Responsividade no desktop
-    🟡 README com mídia
-
-
-# ❌ Ainda falta implementar:
-    ❌ Favoritos
-    ❌ Testes unitários
-    ❌ Documentação técnica extra
-    ❌ WebHooks
+### 🟡 Improvements Needed
+- Desktop responsiveness refinements
+- Additional media in documentation
+- Favorite persistence
+- Unit test coverage
+- Technical documentation
+- Webhook integrations

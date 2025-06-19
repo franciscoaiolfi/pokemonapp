@@ -18,11 +18,10 @@ ion-card {
   }
 }
 
-ion-footer{
-    position: fixed;
-    bottom: 0;
+ion-footer {
+  position: fixed;
+  bottom: 0;
 }
-
 
 ion-card-header {
   display: flex;
@@ -36,9 +35,7 @@ ion-card-header {
     font-size: 20px;
     color: var(--ion-color-danger);
   }
-
 }
-
 
 @media (min-width: 768px) {
   ion-col {
@@ -50,4 +47,3 @@ ion-card-header {
     font-size: 1.2rem;
   }
 }
-
