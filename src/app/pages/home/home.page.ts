@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { heart, heartOutline } from 'ionicons/icons';
+import { addIcons } from 'ionicons'; 
 import {
- IonContent,
+  IonContent,
   IonHeader,
   IonTitle,
   IonToolbar,
-  IonButton,
   IonFooter,
   IonButtons,
   IonCard,
@@ -16,11 +17,14 @@ import {
   IonImg,
   IonGrid,
   IonRow,
-  IonCol
+  IonCol,
+  IonButton,
+  IonIcon,
 } from '@ionic/angular/standalone';
 import { PokemonService } from 'src/app/services/pokemon/pokemon.service';
 import { PokemonCard, PokemonListItem } from 'src/app/models/pokemon.model';
 import { Router, RouterModule } from '@angular/router';
+import { FavoriteService } from 'src/app/services/pokemon/favorite.service';
 
 @Component({
   selector: 'app-home',
@@ -28,24 +32,26 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
-     CommonModule,
-  FormsModule,
-  RouterModule,
-  IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
-  IonButton,
-  IonFooter,
-  IonButtons,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonImg,
-  IonGrid,
-  IonRow,
-  IonCol
+    CommonModule,
+    FormsModule,
+    RouterModule,
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonButton,
+    IonFooter,
+    IonButtons,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent,
+    IonImg,
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonButton,
+    IonIcon,
   ],
 })
 export class HomePage implements OnInit {
@@ -53,11 +59,16 @@ export class HomePage implements OnInit {
   limit = 20;
   offset = 0;
 
-  constructor(private pokemonService: PokemonService, private router: Router) {}
+  constructor(
+    private pokemonService: PokemonService,
+    private router: Router,
+    private favoriteService: FavoriteService
+  ) {
+    addIcons({ heart, heartOutline });
+  }
 
   ngOnInit() {
     this.loadPokemons();
-    // this.loadPokemonsByName()
   }
 
   loadPokemons() {
@@ -96,7 +107,14 @@ export class HomePage implements OnInit {
     }
   }
   goToDetails(name: string): void {
-  this.router.navigate(['/details', name]);
-}
+    this.router.navigate(['/details', name]);
+  }
 
+  isFavorite(name: string): boolean {
+    return this.favoriteService.isFavorite(name);
+  }
+
+  toggleFavorite(name: string): void {
+    this.favoriteService.toggle(name);
+  }
 }

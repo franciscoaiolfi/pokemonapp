@@ -2655,7 +2655,7 @@
     "@rollup/rollup-win32-arm64-msvc" "4.34.9"
     "@rollup/rollup-win32-x64-msvc" "4.34.9"
 
-"@stencil/core@^4.0.3":
+"@stencil/core@^4.0.3", "@stencil/core@^4.30.0":
   version "4.35.1"
   resolved "https://registry.yarnpkg.com/@stencil/core/-/core-4.35.1.tgz#044a7bb8564615a265507dbdf09044882ac15415"
   integrity sha512-u65m3TbzOtpn679gUV4Yvi8YpInhRJ62js30a7YtXief9Ej/vzrhwDE22U0w4DMWJOYwAsJl133BUaZkWwnmzg==
@@ -5424,6 +5424,13 @@ ionicons@^7.0.0, ionicons@^7.2.2:
   integrity sha512-ZK94MMqgzMCPPMhmk8Ouu6goyVHFIlw/ACP6oe3FrikcI0N7CX0xcwVaEbUc0G/v3W0shI93vo+9ve/KpvcNhQ==
   dependencies:
     "@stencil/core" "^4.0.3"
+
+ionicons@^8.0.9:
+  version "8.0.9"
+  resolved "https://registry.yarnpkg.com/ionicons/-/ionicons-8.0.9.tgz#a69eae98a009d4c8f54b01c4b6f6b7c245cb9114"
+  integrity sha512-qC8xcTVcrmC9e+4KwigtbfKa9J27rFzsjvi1wQBue178Az6u6mFDpL/Q10w534+RD5PkmiXlqy7my7+h2B/zTw==
+  dependencies:
+    "@stencil/core" "^4.30.0"
 
 ip-address@^9.0.5:
   version "9.0.5"
