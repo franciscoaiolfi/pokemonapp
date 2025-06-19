@@ -22,10 +22,10 @@ export interface PokemonDetails {
   height: number;
   weight: number;
   base_experience: number;
-  sprites: {
-    other: {
+  sprites?: {
+    other?: {
       'official-artwork': {
-        front_default: string;
+        front_default?: string;
       };
     };
   };
