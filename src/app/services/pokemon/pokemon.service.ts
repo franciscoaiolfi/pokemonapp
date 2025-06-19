@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PokemonListResponse } from 'src/app/models/pokemon.model';
+import { PokemonDetails, PokemonListResponse } from 'src/app/models/pokemon.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -16,6 +16,6 @@ export class PokemonService {
   }
 
   getPokemonByName(name:string){
-    return this.http.get<any>(`${this.baseUrl}/${name}`)
+    return this.http.get<PokemonDetails>(`${this.baseUrl}/${name}`)
   }
 }

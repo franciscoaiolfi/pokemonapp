@@ -8,12 +8,12 @@
   <ion-grid>
     <ion-row>
       <ion-col size="6" *ngFor="let pokemon of pokemons">
-        <ion-card routerLink="/pokemon/{{ pokemon.name }}">
+        <ion-card routerLink="/details/{{ pokemon.name }}" class="clickable-card">
           <ion-card-header>
             <ion-card-title>{{ pokemon.name | titlecase }}</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            <ion-img [src]="pokemon.image" alt="{{ pokemon.name }}"></ion-img>
+            <ion-img [src]="pokemon.image" [alt]="pokemon.name"></ion-img>
           </ion-card-content>
         </ion-card>
       </ion-col>
