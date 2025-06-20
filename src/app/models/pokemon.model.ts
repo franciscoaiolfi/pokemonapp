@@ -13,8 +13,9 @@ export interface PokemonListResponse {
 export interface PokemonCard extends PokemonListItem {
   id: number;
   image: string;
+  types?: string[];
+  isFavorite?: boolean;
 }
-
 
 export interface PokemonDetails {
   id: number;
@@ -24,7 +25,7 @@ export interface PokemonDetails {
   base_experience: number;
   sprites?: {
     other?: {
-      'official-artwork': {
+      'official-artwork'?: {
         front_default?: string;
       };
     };

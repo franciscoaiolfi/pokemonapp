@@ -94,6 +94,9 @@ export class HomePage implements OnInit {
     const parts = url.split('/');
     return parseInt(parts[parts.length - 2], 10);
   }
+  goToFavorites(): void {
+  this.router.navigate(['/favorites']);
+}
 
   nextPage() {
     this.offset += this.limit;
