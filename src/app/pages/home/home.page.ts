@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { heart, heartOutline } from 'ionicons/icons';
-import { addIcons } from 'ionicons'; 
+import { addIcons } from 'ionicons';
 import {
   IonContent,
   IonHeader,
@@ -25,6 +25,7 @@ import { PokemonService } from 'src/app/services/pokemon/pokemon.service';
 import { PokemonCard, PokemonListItem } from 'src/app/models/pokemon.model';
 import { Router, RouterModule } from '@angular/router';
 import { FavoriteService } from 'src/app/services/pokemon/favorite.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -54,11 +55,11 @@ import { FavoriteService } from 'src/app/services/pokemon/favorite.service';
     IonIcon,
   ],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit, OnDestroy {
   pokemons: PokemonCard[] = [];
   limit = 20;
   offset = 0;
-
+  private destroy$ = new Subject<void>();
   constructor(
     private pokemonService: PokemonService,
     private router: Router,
@@ -70,24 +71,31 @@ export class HomePage implements OnInit {
   ngOnInit() {
     this.loadPokemons();
   }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   loadPokemons() {
-    this.pokemonService.getPokemonsList(this.offset, this.limit).subscribe({
-      next: (response) => {
-        const pokemons = response.results;
-        this.pokemons = pokemons.map((p: PokemonListItem) => ({
-          ...p,
-          id: this.getIdFromUrl(p.url),
-          image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.getIdFromUrl(
-            p.url
-          )}.png`,
-        }));
-        console.log(response);
-      },
-      error: (err) => {
-        console.log('deu erro ');
-      },
-    });
+    this.pokemonService
+      .getPokemonsList(this.offset, this.limit)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          const pokemons = response.results;
+          this.pokemons = pokemons.map((p: PokemonListItem) => ({
+            ...p,
+            id: this.getIdFromUrl(p.url),
+            image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.getIdFromUrl(
+              p.url
+            )}.png`,
+          }));
+          console.log(response);
+        },
+        error: (err) => {
+          console.log('deu erro ');
+        },
+      });
   }
 
   getIdFromUrl(url: string): number {
@@ -95,8 +103,8 @@ export class HomePage implements OnInit {
     return parseInt(parts[parts.length - 2], 10);
   }
   goToFavorites(): void {
-  this.router.navigate(['/favorites']);
-}
+    this.router.navigate(['/favorites']);
+  }
 
   nextPage() {
     this.offset += this.limit;
