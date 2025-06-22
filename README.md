@@ -49,7 +49,8 @@ A Pokémon encyclopedia built with Ionic + Angular using the PokeAPI to list Pok
 | Pagination (offset/limit) | ✅ |
 | Dependency injection | ✅ |
 | Strict typing | ✅ |
-| Favorite persistence | ✅ | Upgrande with indexDb ✅
+| Favorite persistence | ✅ | 
+| Upgrade with indexDB| ✅ | 
 
 ### 🟡 Improvements Needed
 - Desktop responsiveness refinements
@@ -57,3 +58,9 @@ A Pokémon encyclopedia built with Ionic + Angular using the PokeAPI to list Pok
 - Unit test coverage
 - Technical documentation
 - Webhook integrations
+
+
+
+### IndexDB Docs
+
+https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API
