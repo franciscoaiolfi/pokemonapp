@@ -26,6 +26,7 @@ import { PokemonCard, PokemonListItem } from 'src/app/models/pokemon.model';
 import { Router, RouterModule } from '@angular/router';
 import { FavoriteService } from 'src/app/services/pokemon/favorite.service';
 import { Subject, takeUntil } from 'rxjs';
+import { CardPokemonComponent } from 'src/app/shared/components/card-pokemon/card-pokemon.component';
 
 @Component({
   selector: 'app-home',
@@ -33,6 +34,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [
+    CardPokemonComponent,
     CommonModule,
     FormsModule,
     RouterModule,
@@ -121,11 +123,11 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate(['/details', name]);
   }
 
-  isFavorite(name: string): boolean {
-    return this.favoriteService.isFavorite(name);
-  }
+async isFavorite(name: string): Promise<boolean> {
+  return await this.favoriteService.isFavorite(name);
+}
 
-  toggleFavorite(name: string): void {
-    this.favoriteService.toggle(name);
-  }
+async toggleFavorite(name: string): Promise<void> {
+  await this.favoriteService.toggle(name);
+}
 }

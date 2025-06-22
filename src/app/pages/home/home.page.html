@@ -14,28 +14,7 @@
   <ion-grid>
     <ion-row>
       <ion-col size="6" *ngFor="let pokemon of pokemons">
-        <ion-card
-          routerLink="/details/{{ pokemon.name }}"
-          class="clickable-card"
-        >
-          <ion-card-header>
-            <ion-card-title>{{ pokemon.name | titlecase }}</ion-card-title>
-            <ion-button
-              fill="clear"
-              size="small"
-              (click)="toggleFavorite(pokemon.name); $event.stopPropagation()"
-              style="min-width: 32px; min-height: 32px"
-            >
-              <ion-icon
-                [name]="isFavorite(pokemon.name) ? 'heart' : 'heart-outline'"
-                slot="icon-only"
-              ></ion-icon>
-            </ion-button>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-img [src]="pokemon.image" [alt]="pokemon.name"></ion-img>
-          </ion-card-content>
-        </ion-card>
+        <app-card-pokemon [pokemon]="pokemon"></app-card-pokemon>
       </ion-col>
     </ion-row>
   </ion-grid>

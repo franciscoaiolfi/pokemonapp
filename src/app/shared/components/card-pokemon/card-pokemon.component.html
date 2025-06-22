@@ -1,3 +1,21 @@
-<p>
-  card-pokemon works!
-</p>
+<ion-card [routerLink]="['/details', pokemon.name]" class="clickable-card">
+  <ion-card-header>
+    <ion-card-title>{{ pokemon.name | titlecase }}</ion-card-title>
+
+    <ion-button
+      fill="clear"
+      size="small"
+      (click)="toggleFavorite($event)"
+      style="min-width: 32px; min-height: 32px"
+    >
+      <ion-icon
+        [name]="isFavoriteStatus ? 'heart' : 'heart-outline'"
+        slot="icon-only"
+      ></ion-icon>
+    </ion-button>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-img [src]="pokemon.image" [alt]="pokemon.name" />
+  </ion-card-content>
+</ion-card>

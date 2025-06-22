@@ -49,7 +49,7 @@ A Pokémon encyclopedia built with Ionic + Angular using the PokeAPI to list Pok
 | Pagination (offset/limit) | ✅ |
 | Dependency injection | ✅ |
 | Strict typing | ✅ |
-| Favorite persistence | ✅ |
+| Favorite persistence | ✅ | Upgrande with indexDb ✅
 
 ### 🟡 Improvements Needed
 - Desktop responsiveness refinements

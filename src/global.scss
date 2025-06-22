@@ -36,3 +36,22 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
 
+ion-card {
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  font-size: 1rem;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  ion-img {
+    width: 100%;
+    height: auto;
+  }
+
+  ion-card-title {
+    font-size: 18px;
+  }
+}

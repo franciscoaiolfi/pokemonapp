@@ -1,40 +1,58 @@
+// favorite.service.ts
 import { Injectable } from '@angular/core';
+import { openDB } from 'idb';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FavoriteService {
-  private storageKey = 'favoritePokemons'
+  private dbPromise = openDB('poke-db', 1, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains('favorites')) {
+        db.createObjectStore('favorites');
+      }
+    },
+  });
 
-  constructor() { }
+  private cache: string[] = [];
 
-   getFavorites(): string[] {
-    const data = localStorage.getItem(this.storageKey);
-    return data ? JSON.parse(data) : [];
+  constructor() {
+    this.init();
   }
 
-    isFavorite(name: string): boolean {
-    return this.getFavorites().includes(name);
+  private async init() {
+    const db = await this.dbPromise;
+    const keys = await db.getAllKeys('favorites');
+    this.cache = keys as string[];
   }
 
-    add(name: string): void {
-    const favorites = this.getFavorites();
-    if (!favorites.includes(name)) {
-      favorites.push(name);
-      this.save(favorites);
+  public getFavorites(): string[] {
+    return this.cache;
+  }
+
+  public isFavorite(name: string): boolean {
+    return this.cache.includes(name);
+  }
+
+  public async add(name: string): Promise<void> {
+    if (!this.isFavorite(name)) {
+      this.cache.push(name);
+      const db = await this.dbPromise;
+      await db.put('favorites', true, name);
     }
   }
 
-    remove(name: string): void {
-    const favorites = this.getFavorites().filter(n => n !== name);
-    this.save(favorites);
+  public async remove(name: string): Promise<void> {
+    this.cache = this.cache.filter(n => n !== name);
+    const db = await this.dbPromise;
+    await db.delete('favorites', name);
   }
 
-    toggle(name: string): void {
-    this.isFavorite(name) ? this.remove(name) : this.add(name);
-  }
-
-   private save(favorites: string[]): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(favorites));
+  public async toggle(name: string): Promise<void> {
+    if (this.isFavorite(name)) {
+      await this.remove(name);
+    } else {
+      await this.add(name);
+    }
   }
 }
