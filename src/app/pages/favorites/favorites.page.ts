@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { Location } from '@angular/common';
 import {
   IonContent,
   IonHeader,
@@ -18,14 +17,17 @@ import {
   IonImg,
   IonButton,
   IonIcon,
-   IonBackButton,
-    IonButtons
+  IonBackButton,
+  IonButtons,
+  IonSpinner,
+  IonAlert
 } from '@ionic/angular/standalone';
-
 import { PokemonService } from 'src/app/services/pokemon/pokemon.service';
-import { PokemonCard, PokemonDetails } from 'src/app/models/pokemon.model';
+import { PokemonCard } from 'src/app/models/pokemon.model';
 import { FavoriteService } from 'src/app/services/pokemon/favorite.service';
 import { mapDetailsToCard } from 'src/app/utils/mapDetailsToCard';
+import { Subject, of, forkJoin } from 'rxjs';
+import { switchMap, takeUntil, finalize, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-favorites',
@@ -50,37 +52,56 @@ import { mapDetailsToCard } from 'src/app/utils/mapDetailsToCard';
     IonImg,
     IonButton,
     IonIcon,
-     IonBackButton,
-      IonButtons
+    IonBackButton,
+    IonButtons,
+    IonSpinner,
+    IonAlert
   ],
 })
-export class FavoritesPage implements OnInit {
+export class FavoritesPage implements OnInit, OnDestroy {
   favorites: PokemonCard[] = [];
+  isLoading = false;
+  errorMessage: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private pokemonService: PokemonService,
-    private favoriteService: FavoriteService,
-    private location: Location
+    private favoriteService: FavoriteService
   ) {}
 
   ngOnInit() {
-    const names = this.favoriteService.getFavorites();
-
-    for (const name of names) {
-      this.pokemonService.getPokemonByName(name).subscribe({
-        next: (poke: PokemonDetails) => {
-          const card = mapDetailsToCard(poke);
-          this.favorites.push({ ...card, isFavorite: true });
+    this.favoriteService.favorites$
+      .pipe(
+        takeUntil(this.destroy$),
+        switchMap((names) => {
+          this.isLoading = true;
+          this.errorMessage = null;
+          if (names.length === 0) {
+            this.favorites = [];
+            return of([]);
+          }
+          const requests = names.map((name) =>
+            this.pokemonService.getPokemonByName(name).pipe(
+              map(details => ({ ...mapDetailsToCard(details), isFavorite: true }))
+            )
+          );
+          return forkJoin(requests).pipe(
+            finalize(() => this.isLoading = false)
+          );
+        })
+      )
+      .subscribe({
+        next: (favorites) => {
+          this.favorites = favorites;
         },
-        error: () => {
-          console.warn(`Não foi possível carregar ${name}`);
+        error: (err) => {
+          this.errorMessage = err.message;
         },
       });
-    }
   }
-  handleBackClick(event: Event): void {
-  event.preventDefault();
-  this.location.back();
-}
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

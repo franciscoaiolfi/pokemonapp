@@ -20,12 +20,15 @@ import {
   IonCol,
   IonButton,
   IonIcon,
+  IonSpinner,
+  IonAlert
 } from '@ionic/angular/standalone';
 import { PokemonService } from 'src/app/services/pokemon/pokemon.service';
-import { PokemonCard, PokemonListItem } from 'src/app/models/pokemon.model';
+import { PokemonCard } from 'src/app/models/pokemon.model';
 import { Router, RouterModule } from '@angular/router';
 import { FavoriteService } from 'src/app/services/pokemon/favorite.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
+import { takeUntil, finalize } from 'rxjs/operators';
 import { CardPokemonComponent } from 'src/app/shared/components/card-pokemon/card-pokemon.component';
 
 @Component({
@@ -55,55 +58,58 @@ import { CardPokemonComponent } from 'src/app/shared/components/card-pokemon/car
     IonCol,
     IonButton,
     IonIcon,
+    IonSpinner,
+    IonAlert
   ],
 })
 export class HomePage implements OnInit, OnDestroy {
   pokemons: PokemonCard[] = [];
   limit = 20;
   offset = 0;
+  isLoading = false;
+  errorMessage: string | null = null;
   private destroy$ = new Subject<void>();
+
   constructor(
     private pokemonService: PokemonService,
     private router: Router,
-    private favoriteService: FavoriteService
+    public favoriteService: FavoriteService
   ) {
     addIcons({ heart, heartOutline });
   }
 
   ngOnInit() {
     this.loadPokemons();
+    this.favoriteService.favorites$.pipe(takeUntil(this.destroy$)).subscribe(favorites => {
+      this.pokemons = this.pokemons.map(p => ({ ...p, isFavorite: favorites.includes(p.name) }));
+    });
   }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
   loadPokemons() {
+    this.isLoading = true;
+    this.errorMessage = null;
     this.pokemonService
       .getPokemonsList(this.offset, this.limit)
-      .pipe(takeUntil(this.destroy$))
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isLoading = false)
+      )
       .subscribe({
-        next: (response) => {
-          const pokemons = response.results;
-          this.pokemons = pokemons.map((p: PokemonListItem) => ({
-            ...p,
-            id: this.getIdFromUrl(p.url),
-            image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${this.getIdFromUrl(
-              p.url
-            )}.png`,
-          }));
-          console.log(response);
+        next: (pokemons) => {
+          const favorites = this.favoriteService.getFavorites();
+          this.pokemons = pokemons.map(p => ({ ...p, isFavorite: favorites.includes(p.name) }));
         },
         error: (err) => {
-          console.log('deu erro ');
+          this.errorMessage = err.message;
         },
       });
   }
 
-  getIdFromUrl(url: string): number {
-    const parts = url.split('/');
-    return parseInt(parts[parts.length - 2], 10);
-  }
   goToFavorites(): void {
     this.router.navigate(['/favorites']);
   }
@@ -119,15 +125,12 @@ export class HomePage implements OnInit, OnDestroy {
       this.loadPokemons();
     }
   }
+
   goToDetails(name: string): void {
     this.router.navigate(['/details', name]);
   }
 
-async isFavorite(name: string): Promise<boolean> {
-  return await this.favoriteService.isFavorite(name);
-}
-
-async toggleFavorite(name: string): Promise<void> {
-  await this.favoriteService.toggle(name);
-}
+  toggleFavorite(name: string): void {
+    this.favoriteService.toggle(name);
+  }
 }
